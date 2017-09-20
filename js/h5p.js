@@ -201,6 +201,31 @@ H5P.init = function (target) {
     // Keep track of when we started
     H5P.opened[contentId] = new Date();
 
+    H5P.on(instance, 'content.opened', function(event) {
+        var data = event.data;
+        if (data === undefined || !H5PIntegration.contentTracking) {
+            return ;
+        }
+        H5P.jQuery.post(H5PIntegration.ajax.contentTrackingUrl, {
+            contentId: contentId,
+            time: Math.round(data.time.getTime() / 1000),
+
+        });
+    });
+
+    H5P.on(instance, 'content.ended', function(event) {
+        var data = event.data;
+        if (data === undefined || !H5PIntegration.contentTracking) {
+        return ;
+      }
+      // Post the results
+      H5P.jQuery.post(H5PIntegration.ajax.contentTrackingUrl, {
+          contentId : contentId,
+          time: Math.round(data.time.getTime() / 1000),
+          duration: data.duration
+      });
+    });
+
     // Handle events when the user finishes the content. Useful for logging exercise results.
     H5P.on(instance, 'finish', function (event) {
       if (event.data !== undefined) {
