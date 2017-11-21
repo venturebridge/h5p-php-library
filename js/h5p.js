@@ -134,24 +134,24 @@ H5P.init = function (target) {
     // Check if we should add and display a fullscreen button for this H5P.
     if (contentData.fullScreen == 1 && H5P.fullscreenSupported) {
       H5P.jQuery(
-        '<div class="h5p-content-controls">' +
+          '<div class="h5p-content-controls">' +
           '<div role="button" ' +
-                'tabindex="0" ' +
-                'class="h5p-enable-fullscreen" ' +
-                'title="' + H5P.t('fullscreen') + '">' +
+          'tabindex="0" ' +
+          'class="h5p-enable-fullscreen" ' +
+          'title="' + H5P.t('fullscreen') + '">' +
           '</div>' +
-        '</div>')
-        .prependTo($container)
-          .children()
-          .click(function () {
-            H5P.fullScreen($container, instance);
-          })
-        .keydown(function (e) {
-          if (e.which === 32 || e.which === 13) {
-            H5P.fullScreen($container, instance);
-            return false;
-          }
-        })
+          '</div>')
+      .prependTo($container)
+      .children()
+      .click(function () {
+        H5P.fullScreen($container, instance);
+      })
+      .keydown(function (e) {
+        if (e.which === 32 || e.which === 13) {
+          H5P.fullScreen($container, instance);
+          return false;
+        }
+      })
       ;
     }
 
@@ -202,27 +202,30 @@ H5P.init = function (target) {
     H5P.opened[contentId] = new Date();
 
     H5P.on(instance, 'content.opened', function(event) {
-        var data = event.data;
-        if (data === undefined || !H5PIntegration.contentTracking) {
-            return ;
-        }
-        H5P.jQuery.post(H5PIntegration.ajax.contentTrackingUrl, {
-            contentId: contentId,
-            time: Math.round(data.time.getTime() / 1000),
+      var data = event.data;
+      if (data === undefined || !H5PIntegration.contentTracking) {
+        return ;
+      }
+      H5P.jQuery.post(H5PIntegration.ajax.contentTrackingUrl, {
+        type: event.type,
+        contentId: contentId,
+        time: Math.round(data.time.getTime() / 1000),
 
-        });
+      });
     });
 
     H5P.on(instance, 'content.ended', function(event) {
-        var data = event.data;
-        if (data === undefined || !H5PIntegration.contentTracking) {
+      console.log(event);
+      var data = event.data;
+      if (data === undefined || !H5PIntegration.contentTracking) {
         return ;
       }
       // Post the results
       H5P.jQuery.post(H5PIntegration.ajax.contentTrackingUrl, {
-          contentId : contentId,
-          time: Math.round(data.time.getTime() / 1000),
-          duration: data.duration
+        type: event.type,
+        contentId : contentId,
+        time: Math.round(data.time.getTime() / 1000),
+        duration: data.duration
       });
     });
 
@@ -238,8 +241,8 @@ H5P.init = function (target) {
 
     // Auto save current state if supported
     if (H5PIntegration.saveFreq !== false && (
-        instance.getCurrentState instanceof Function ||
-        typeof instance.getCurrentState === 'function')) {
+            instance.getCurrentState instanceof Function ||
+            typeof instance.getCurrentState === 'function')) {
 
       var saveTimer, save = function () {
         var state = instance.getCurrentState();
@@ -411,11 +414,11 @@ H5P.getHeadTags = function (contentId) {
   };
 
   return '<base target="_parent">' +
-         createStyleTags(H5PIntegration.core.styles) +
-         createStyleTags(H5PIntegration.contents['cid-' + contentId].styles) +
-         createScriptTags(H5PIntegration.core.scripts) +
-         createScriptTags(H5PIntegration.contents['cid-' + contentId].scripts) +
-         '<script>H5PIntegration = window.parent.H5PIntegration; var H5P = H5P || {}; H5P.externalEmbed = false;</script>';
+      createStyleTags(H5PIntegration.core.styles) +
+      createStyleTags(H5PIntegration.contents['cid-' + contentId].styles) +
+      createScriptTags(H5PIntegration.core.scripts) +
+      createScriptTags(H5PIntegration.contents['cid-' + contentId].scripts) +
+      '<script>H5PIntegration = window.parent.H5PIntegration; var H5P = H5P || {}; H5P.externalEmbed = false;</script>';
 };
 
 /**
@@ -947,25 +950,25 @@ H5P.Dialog = function (name, title, content, $element) {
                                 <div class="h5p-close" role="button" tabindex="0" title="' + H5P.t('close') + '">\
                               </div>\
                             </div>')
-    .insertAfter($element)
-    .click(function () {
-      self.close();
-    })
-    .children('.h5p-inner')
-      .click(function () {
-        return false;
-      })
-      .find('.h5p-close')
-        .click(function () {
-          self.close();
-        })
-        .end()
-      .find('a')
-        .click(function (e) {
-          e.stopPropagation();
-        })
-      .end()
-    .end();
+  .insertAfter($element)
+  .click(function () {
+    self.close();
+  })
+  .children('.h5p-inner')
+  .click(function () {
+    return false;
+  })
+  .find('.h5p-close')
+  .click(function () {
+    self.close();
+  })
+  .end()
+  .find('a')
+  .click(function (e) {
+    e.stopPropagation();
+  })
+  .end()
+  .end();
 
   /**
    * Opens the dialog.
@@ -1137,8 +1140,8 @@ H5P.openEmbedDialog = function ($element, embedCode, resizeCode, size) {
     // Select text and expand textareas
     $dialog.find('.h5p-embed-code-container').each(function(index, value) {
       H5P.jQuery(this).css('height', this.scrollHeight + 'px').focus(function() {
-          H5P.jQuery(this).select();
-        });
+        H5P.jQuery(this).select();
+      });
     });
     $dialog.find('.h5p-embed-code-container').eq(0).select();
     positionInner();
@@ -1831,11 +1834,11 @@ H5P.createTitle = function (rawTitle, maxLength) {
     maxLength = 60;
   }
   var title = H5P.jQuery('<div></div>')
-    .text(
+  .text(
       // Strip tags
       rawTitle.replace(/(<([^>]+)>)/ig,"")
-    // Escape
-    ).text();
+      // Escape
+  ).text();
   if (title.length > maxLength) {
     title = title.substr(0, maxLength - 3) + '...';
   }
