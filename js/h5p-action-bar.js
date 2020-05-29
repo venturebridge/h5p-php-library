@@ -35,6 +35,7 @@ H5P.ActionBar = (function ($, EventDispatcher) {
       var handler = function () {
         self.trigger(type);
       };
+
       H5P.jQuery('<li/>', {
         'class': 'h5p-button h5p-noselect h5p-' + (customClass ? customClass : type),
         role: 'button',
@@ -52,7 +53,6 @@ H5P.ActionBar = (function ($, EventDispatcher) {
         },
         appendTo: $actions
       });
-
       hasActions = true;
     };
 
@@ -66,6 +66,14 @@ H5P.ActionBar = (function ($, EventDispatcher) {
     }
     if (displayOptions.embed) {
       addActionButton('embed');
+    }
+
+    if (displayOptions.pdf) {
+      addActionButton('PDF', 'export');
+    }
+
+    if (displayOptions.document) {
+      addActionButton('Document', 'export');
     }
     if (displayOptions.icon) {
       // Add about H5P button icon

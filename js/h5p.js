@@ -169,6 +169,16 @@ H5P.init = function (target) {
         }
       }
 
+      var downloadFileDirectly = function(path) {
+        var file_path = contentData.extra.pdf;
+        var a = document.createElement('a');
+        a.href = file_path;
+        a.download = file_path.substr(file_path.lastIndexOf('/') + 1);
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      }
+
       // Create action bar
       var actionBar = new H5P.ActionBar(displayOptions);
       var $actions = actionBar.getDOMElement();
@@ -189,6 +199,14 @@ H5P.init = function (target) {
         });
         instance.triggerXAPI('accessed-embed');
       });
+
+      actionBar.on('PDF', function() {
+        downloadFileDirectly(contentData.extra.pdf);
+      });
+
+      actionBar.on('Document', function() {
+        downloadFileDirectly(contentData.extra.document);
+      })
 
       if (actionBar.hasActions()) {
         displayFrame = true;
