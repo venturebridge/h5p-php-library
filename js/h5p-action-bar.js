@@ -59,7 +59,7 @@ H5P.ActionBar = (function ($, EventDispatcher) {
     // Register action bar buttons
     if (displayOptions.export) {
       // Add export button
-      addActionButton('download', 'export');
+      // addActionButton('download', 'export');
     }
     if (displayOptions.copyright) {
       addActionButton('copyrights');
